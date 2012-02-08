@@ -38,8 +38,8 @@ For more demos please visit the mooReadAll demo page at http://www.abidibo.net/p
 Screenshots
 -----------
 
-![Screenshot](http://github.com/abidibo/mooTree/raw/master/Docs/mp_screenshot1.png)
-![Screenshot](http://github.com/abidibo/mooTree/raw/master/Docs/mp_screenshot2.png)
+![Screenshot](http://github.com/abidibo/moopopup/raw/master/Docs/mp_screenshot1.png)
+![Screenshot](http://github.com/abidibo/moopopup/raw/master/Docs/mp_screenshot2.png)
 
 Links
 -----------------
