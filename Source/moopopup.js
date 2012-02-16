@@ -8,9 +8,9 @@ authors:
 - abidibo (Otto srl) <abidibo@gmail.com>
 
 requires:
-- core/1.3
-- more/1.3 Drag
-- more/1.3 Drag.Move
+- core/1.4.4
+- more/1.4.0.1 Drag
+- more/1.4.0.1 Drag.Move
 
 provides:
 - moopopup
@@ -48,6 +48,8 @@ var moopopup = new Class({
 		resizable: true,
 		// show over an overlay
 		overlay: true,
+		// close window when clicking out of it if overlay is true
+		overlay_click_close_window: true,
 		// url for ajax request contents
 		url: null,
 		// test content
@@ -170,6 +172,15 @@ var moopopup = new Class({
 		// overlay animation
 		this.overlay_anim = new Fx.Tween(this.overlay, {property: 'opacity'});
 		this.overlay_anim.start(0, 0.7).chain(function() { this.renderPopup(); }.bind(this));
+
+		if(this.options.overlay_click_close_window) {
+			this.overlay.addEvent('click', function(e) {
+				var event = new DOMEvent(e);
+				if(event.target != this.container) {
+					this.close();
+				}
+			}.bind(this));
+		}
 
 	}.protect(),
 	renderPopup: function() {

@@ -12,8 +12,8 @@ How to use
 
 moopopup requires 
 
-- core/1.3 
-- more/1.3 Drag, Drag.Move
+- core/1.4.4 
+- more/1.4.0.1 Drag, Drag.Move
 
 **Include mootools framework and moopopup plugin**
 
@@ -33,7 +33,7 @@ Javascript:
 		mp_instance.display();
 	}
 
-For more demos please visit the mooReadAll demo page at http://www.abidibo.net/projects/js/moopopup/demo
+For more demos please visit the moopopup demo page at http://www.abidibo.net/projects/js/moopopup/demo
 
 Screenshots
 -----------
