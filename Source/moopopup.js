@@ -380,7 +380,7 @@ var moopopup = new Class({
 
 			// animate the overlay before disposing it
 			if(this.options.overlay) {
-				this.overlay_anim.start(0).chain(function() { this.overlay.dispose(); }.bind(this));
+				this.overlay_anim.start(0.7, 0).chain(function() { this.overlay.dispose(); }.bind(this));
 			}
 
 			// is there a callback function?
