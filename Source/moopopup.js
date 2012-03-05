@@ -129,7 +129,7 @@ var moopopup = new Class({
 		
 		for(var i=0;i<window.frames.length;i++) {
 			var myFrame = window.frames[i];
-			if(sameDomain(myFrame)) {
+			if(this.sameDomain(myFrame)) {
 				var obs = myFrame.document.getElementsByTagName('object');
 				for(var ii=0; ii<obs.length; ii++) {
 					obs[ii].style.visibility='visible';
@@ -331,6 +331,9 @@ var moopopup = new Class({
 		
 		if(typeOf(this.options.max_body_height) == 'number') {
 			this.body.setStyle('max-height', this.options.max_body_height+'px');
+		}
+		else {
+			this.body.setStyle('max-height', (this.getViewport().height - 100) + 'px');
 		}
 
 		this.body.inject(this.container, 'bottom');
