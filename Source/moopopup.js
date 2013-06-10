@@ -239,16 +239,22 @@ var moopopup = new Class({
 	request: function() {
 			 
 		var request = new Request.HTML({
-			evalScripts: true,
+			evalScripts: false,
 			url: this.options.url,
 			method:	'get',
 			onComplete: function(responseTree, responseElements, responseHTML, responseJavaScript) {
 				$(this.options.id).getChildren('.moopopup-body')[0].set('html', responseHTML);
-				this.loading.dispose();
-				// now let's position the popup
-				this.position();
-				// ... and make it visible
-				this.container.setStyle('visibility', 'visible');
+        // eval script when html is ready inside the target element, not before
+        eval(responseJavaScript);
+        // wait a moment to let the browser charge images before reposition the container
+        var self = this;
+				(function() {
+          self.loading.dispose();
+          // now let's position the popup
+          self.position();
+          // ... and make it visible
+          self.container.setStyle('visibility', 'visible')
+        }).delay(1000);
 			}.bind(this)
 		}).send();
 
@@ -296,8 +302,8 @@ var moopopup = new Class({
 		
 		ico_resize.inject(this.container, 'bottom');
 
-		var ylimit = document.body.getSize().y-20;
-		var xlimit = document.body.getSize().x-20;
+		var ylimit = $(document.body).getSize().y-20;
+		var xlimit = $(document.body).getSize().x-20;
 
 		this.container.makeResizable({
 			'handle': ico_resize,
@@ -333,7 +339,7 @@ var moopopup = new Class({
 			this.body.setStyle('max-height', this.options.max_body_height+'px');
 		}
 		else {
-			this.body.setStyle('max-height', (this.getViewport().height - 100) + 'px');
+			this.body.setStyle('max-height', (this.getViewport().height - 120) + 'px');
 		}
 
 		this.body.inject(this.container, 'bottom');
@@ -398,40 +404,31 @@ var moopopup = new Class({
 	},
 	getViewport: function() {
 
-		var width, height, left, top, cX, cY;
+    var document_coords = document.getCoordinates();
+    var document_scroll = document.getScroll();
+    var width = document_coords.width;
+    var height = document_coords.height;
+    var left = document_scroll.x;
+    var top = document_scroll.y;
+    var cX = document_coords.width / 2 + document_scroll.x;
+    var cY = document_coords.height / 2 + document_scroll.y;
 
-		// decided not to support ie6 anymore
-		if(typeof window.innerWidth != 'undefined') {
-			width = window.innerWidth,
-			height = window.innerHeight
-		}
-
-		if(typeOf(self.pageXOffset) != 'null') {
-			top = self.pageYOffset;
-			left = self.pageXOffset;
-		}
-		else if(document.documentElement && document.documentElement.scrollTop) {
-			top = document.documentElement.scrollTop;
-			left = document.documentElement.scrollLeft;
-		}
-		else {
-			top = document.body.clientHeight;
-			left = document.body.clientWidth;
-		}
-
-		cX = left + width/2;
-		cY = top + height/2;
-
-		return {'width':width, 'height':height, 'left':left, 'top':top, 'cX':cX, 'cY':cY};
+    return {'width': width, 'height': height, 'left': left, 'top': top, 'cX': cX, 'cY': cY};
 
 	}.protect(),
 	getMaxZindex: function() {
 	
 		var maxZ = 0;
 		$$('body *').each(function(el) {
-			if(el.getStyle('z-index').toInt()) {
-				maxZ = Math.max(maxZ, el.getStyle('z-index').toInt());
-			}
+      try{
+        // second condition due to automatically inserted skype icons by fucking IE
+        if(el.getStyle('z-index').toInt() && el.getStyle('z-index').toInt() != 2147483647) {
+          maxZ = Math.max(maxZ, el.getStyle('z-index').toInt());
+        }
+      }
+      catch(err) {
+        // IE can't get z-index of some elements (span, img)
+      }
 		});
 
 		return maxZ;
