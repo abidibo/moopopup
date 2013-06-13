@@ -70,6 +70,8 @@ var moopopup = new Class({
 			this.checkOptions();
 		}
 
+    this.max_z_index = this.getMaxZindex();
+
 	},
 	checkOptions: function() {
 
@@ -164,8 +166,8 @@ var moopopup = new Class({
 			'width': doc_dimensions.x,
 			'height': doc_dimensions.y
 		});
-		
-		this.overlay.setStyle('z-index', this.getMaxZindex() + 1);
+
+		this.overlay.setStyle('z-index', ++this.max_z_index);
 
 		this.overlay.inject(document.body);
 
@@ -201,7 +203,7 @@ var moopopup = new Class({
 				'position':'absolute',
 				'top': (viewport.cY-this.loading.getCoordinates().height/2)+'px',		
 				'left': (viewport.cX-this.loading.getCoordinates().width/2)+'px',		
-				'z-index': this.getMaxZindex() + 1
+				'z-index': ++this.max_z_index
 			});
 			this.loading.setStyle('visibility', 'visible');
 			this.request();
@@ -369,11 +371,13 @@ var moopopup = new Class({
 			'left': x+'px'
 		});
 
+    var myscrollable = new Scrollable(this.body);
+    $$('.scrollbar')[0].setStyle('z-index', ++this.max_z_index);
+
 	},
 	setFocus: function() {
-		var maxZ = this.getMaxZindex();
-		if(!this.container.style.zIndex || (this.container.getStyle('z-index').toInt() < maxZ)) {
-			this.container.setStyle('z-index', maxZ+1);
+		if(!this.container.style.zIndex || (this.container.getStyle('z-index').toInt() <= this.max_z_index)) {
+			this.container.setStyle('z-index', ++this.max_z_index);
 		}
 	},
 	close: function() {
