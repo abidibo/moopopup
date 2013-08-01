@@ -22,7 +22,7 @@ For documentation, demo and download link please visit http://www.abidibo.net/pr
 */
 var moopopup = new Class({
 
-	Implements: [Options, Chain],
+	Implements: [Options, Chain, Events],
 	options: {
 		// window identifier
 		id: 'moopopup',
@@ -56,10 +56,12 @@ var moopopup = new Class({
 		text: null,
 		// html node to get content from
 		html_node: null,
-		// callback function called when closing the window
-		close_callback: null,
 		// disable all active objects in the page when sowing the popoup
 		disable_objects: true,
+    // function called when the window is displayed
+    onComplete: function() {},
+    // function called when the window is closed
+    onClose: function() {},
 	},
 	initialize: function(options) {
 
@@ -226,6 +228,8 @@ var moopopup = new Class({
 			this.position();
 			// ...and make it visible
 			this.container.setStyle('visibility', 'visible');
+      // ... fire complete event
+      this.fireEvent('complete');
 		}
 
 		// the popup is draggable?
@@ -256,6 +260,8 @@ var moopopup = new Class({
           self.position();
           // ... and make it visible
           self.container.setStyle('visibility', 'visible')
+          // ... fire complete event
+          this.fireEvent('complete');
         }).delay(1000);
 			}.bind(this)
 		}).send();
@@ -393,12 +399,8 @@ var moopopup = new Class({
 				this.overlay_anim.start(0.7, 0).chain(function() { this.overlay.dispose(); }.bind(this));
 			}
 
-			// is there a callback function?
-    			if(typeOf(this.options.close_callback) == 'function') {
-				this.options.close_callback();		
-			}
-			
 			this.showing = false;
+      this.fireEvent('close');
 
 		}
 
