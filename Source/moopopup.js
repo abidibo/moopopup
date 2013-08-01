@@ -371,9 +371,6 @@ var moopopup = new Class({
 			'left': x+'px'
 		});
 
-    var myscrollable = new Scrollable(this.body);
-    $$('.scrollbar')[0].setStyle('z-index', ++this.max_z_index);
-
 	},
 	setFocus: function() {
 		if(!this.container.style.zIndex || (this.container.getStyle('z-index').toInt() <= this.max_z_index)) {
